@@ -141,7 +141,13 @@ export const weekConfig = {
       totalVotes: 12345,
       winners: [""],
     },
-  ],
+  ] as Array<{
+    weekId: string;
+    title: string;
+    resultImage: string;
+    totalVotes: number;
+    winners: string[];
+  }>,
 
   // ----------------------------------------------------------
   //  PROXIMAMENTE
