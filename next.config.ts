@@ -1,9 +1,12 @@
 import type { NextConfig } from "next";
 
+const isGithubPages = process.env.GITHUB_ACTIONS === "true";
+const basePath = isGithubPages ? "/recreo-argento-app" : "";
+
 const nextConfig: NextConfig = {
   output: "export",
 
-  basePath: "/recreo-argento-app",
+  basePath,
 
   trailingSlash: true,
 
@@ -12,7 +15,7 @@ const nextConfig: NextConfig = {
   },
 
   env: {
-    NEXT_PUBLIC_BASE_PATH: "/recreo-argento-app",
+    NEXT_PUBLIC_BASE_PATH: basePath,
   },
 };
 

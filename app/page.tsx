@@ -9,7 +9,6 @@ import { HallOfFame } from "@/components/HallOfFame";
 import { SiteFooter } from "@/components/SiteFooter";
 import { weekConfig } from "@/config/week.config";
 import { DailyWinner, VoteOption } from "@/lib/types";
-import { isVotingOpen } from "@/lib/utils";
 import { createServerClient } from "@/lib/supabase";
 
 function isSupabaseConfigured() {
@@ -90,7 +89,6 @@ async function getVotingData() {
 
 export default async function Home() {
   const { options, winners } = await getVotingData();
-  const votingOpen = isVotingOpen();
 
   return (
     <div className="min-h-screen bg-[#f8f8f5]">
@@ -107,7 +105,7 @@ export default async function Home() {
           <div className="lg:col-span-2 space-y-5">
             <VotingSection
               availableOptions={options}
-              isClosed={!votingOpen}
+              isClosed={false}
               todayWinner={null}
             />
             <WinnersList winners={winners} />

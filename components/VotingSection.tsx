@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { weekConfig } from "@/config/week.config";
 import { VoteOption } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { cn, isVotingOpen } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import { VoteModal } from "@/components/VoteModal";
 
@@ -13,8 +13,16 @@ type VotingSectionProps = {
   todayWinner: VoteOption | null;
 };
 
-export function VotingSection({ availableOptions, isClosed }: VotingSectionProps) {
+export function VotingSection({ availableOptions, isClosed: initialIsClosed }: VotingSectionProps) {
+  const [isClosed, setIsClosed] = useState(initialIsClosed);
   const [selected, setSelected] = useState<string | null>(null);
+
+  useEffect(() => {
+    const check = () => setIsClosed(!isVotingOpen());
+    check();
+    const interval = setInterval(check, 60_000);
+    return () => clearInterval(interval);
+  }, []);
   const [customText, setCustomText] = useState("");
   const [showCustom, setShowCustom] = useState(false);
   const [showModal, setShowModal] = useState(false);
