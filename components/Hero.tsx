@@ -19,10 +19,11 @@ export function Hero({ winners }: HeroProps) {
       <div className="relative w-full bg-[#141414]">
         {resultImage ? (
           <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={resultImage}
               alt="Resultado de la semana"
+              width={1200}
+              height={675}
               className="w-full h-auto block"
             />
             {/* Fade inferior hacia el color de la banda oscura */}

@@ -4,6 +4,8 @@
 //  textos y settings de pago. Solo necesitás hacer deploy.
 // ============================================================
 
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 export const weekConfig = {
   // ----------------------------------------------------------
   //  SEMANA ACTUAL
@@ -97,7 +99,7 @@ export const weekConfig = {
   //  URL de la imagen que se muestra en el hero.
   //  null = placeholder por defecto mientras no hay resultado.
   // ----------------------------------------------------------
-  resultImage: "/hero-semana0.jpg" as string | null,
+  resultImage: `${BASE}/hero-semana0.jpg` as string | null,
 
   // ----------------------------------------------------------
   //  PAGO (MercadoPago)
@@ -137,7 +139,7 @@ export const weekConfig = {
     {
       weekId: "semana-0",
       title: "La última gran cena argentina",
-      resultImage: "/hall-of-fame1.jpg",
+      resultImage: `${BASE}/hall-of-fame1.jpg`,
       totalVotes: 12345,
       winners: [""],
     },
