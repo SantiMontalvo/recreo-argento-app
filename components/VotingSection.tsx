@@ -40,10 +40,18 @@ export function VotingSection({ availableOptions, isClosed }: VotingSectionProps
     <>
       <section className="bg-white rounded-2xl border border-[#141414]/6 px-5 py-5">
         {/* Header */}
-        <div className="mb-5">
+        <div className="mb-4">
           <h2 className="text-xl font-bold text-[#141414]">{voting.sectionTitle}</h2>
           <p className="text-sm text-[#141414]/50 mt-0.5 leading-snug">
             {weekConfig.challenge.title}
+          </p>
+        </div>
+
+        {/* Banner sorteo */}
+        <div className="flex items-center gap-3 bg-[#ffdd4a] rounded-2xl px-4 py-3 mb-5">
+          <span className="text-xl">🎁</span>
+          <p className="text-xs font-semibold text-[#141414] leading-snug">
+            Cada voto te da una chance en el <span className="underline underline-offset-2">sorteo semanal</span>. Más votos, más chances.
           </p>
         </div>
 
@@ -107,29 +115,34 @@ export function VotingSection({ availableOptions, isClosed }: VotingSectionProps
               {voting.customOptionPlaceholder}
             </button>
           ) : (
-            <div
-              onClick={() => setSelected("custom")}
-              className={cn(
-                "rounded-2xl overflow-hidden cursor-text transition-all",
-                selected === "custom" ? "bg-[#141414] shadow-md" : "bg-[#f8f8f5] border border-[#141414]/6"
-              )}
-            >
-              <div className="px-4 py-3">
-                <input
-                  autoFocus
-                  type="text"
-                  value={customText}
-                  onChange={(e) => setCustomText(e.target.value)}
-                  placeholder="Escribí tu opción..."
-                  maxLength={60}
-                  className={cn(
-                    "w-full bg-transparent text-sm font-semibold outline-none",
-                    selected === "custom"
-                      ? "text-white placeholder:text-white/30"
-                      : "text-[#141414] placeholder:text-[#141414]/30"
-                  )}
-                />
+            <div className="flex flex-col gap-2">
+              <div
+                onClick={() => setSelected("custom")}
+                className={cn(
+                  "rounded-2xl overflow-hidden cursor-text transition-all",
+                  selected === "custom" ? "bg-[#141414] shadow-md" : "bg-[#f8f8f5] border border-[#141414]/6"
+                )}
+              >
+                <div className="px-4 py-3">
+                  <input
+                    autoFocus
+                    type="text"
+                    value={customText}
+                    onChange={(e) => setCustomText(e.target.value)}
+                    placeholder="Escribí tu opción..."
+                    maxLength={60}
+                    className={cn(
+                      "w-full bg-transparent text-sm font-semibold outline-none",
+                      selected === "custom"
+                        ? "text-white placeholder:text-white/30"
+                        : "text-[#141414] placeholder:text-[#141414]/30"
+                    )}
+                  />
+                </div>
               </div>
+              <p className="text-xs text-[#141414]/45 leading-relaxed px-1">
+                ✍️ Escribí el nombre completo y sin abreviaturas (ej: &quot;Juan Manuel Fangio&quot;, no &quot;Fangio&quot;). Los votos con nombres incompletos o ambiguos pueden no contabilizarse.
+              </p>
             </div>
           )}
         </div>

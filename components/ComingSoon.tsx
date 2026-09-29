@@ -1,7 +1,12 @@
 import { weekConfig } from "@/config/week.config";
 
-const BLUR_LEVELS = ["blur-none", "blur-[3px]", "blur-[5px]", "blur-[7px]"];
-const OPACITY_LEVELS = ["opacity-100", "opacity-60", "opacity-40", "opacity-30"];
+const BLUR_LEVELS = ["blur-none", "blur-[1px]", "blur-[3px]", "blur-[5px]"];
+const OPACITY_LEVELS = [
+  "opacity-100",
+  "opacity-60",
+  "opacity-40",
+  "opacity-30",
+];
 
 export function ComingSoon() {
   const items = weekConfig.comingSoon;
@@ -17,7 +22,8 @@ export function ComingSoon() {
       <div className="divide-y divide-white/5">
         {items.map((item, i) => {
           const blur = BLUR_LEVELS[Math.min(i, BLUR_LEVELS.length - 1)];
-          const opacity = OPACITY_LEVELS[Math.min(i, OPACITY_LEVELS.length - 1)];
+          const opacity =
+            OPACITY_LEVELS[Math.min(i, OPACITY_LEVELS.length - 1)];
           const isBlurred = i > 0;
 
           return (
@@ -35,9 +41,7 @@ export function ComingSoon() {
               </div>
               {isBlurred && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-[10px] font-bold text-white/20 uppercase tracking-widest">
-                    Misterio
-                  </span>
+                  <span className="text-[10px] font-bold text-white/20 uppercase tracking-widest"></span>
                 </div>
               )}
             </div>

@@ -11,7 +11,7 @@ export const weekConfig = {
   weekId: "semana-1", // identificador único, no lo cambies una vez que arrancó la semana
   weekNumber: 1,
   startDate: "2026-09-22", // YYYY-MM-DD
-  endDate: "2026-09-28", // YYYY-MM-DD (7 días)
+  endDate: "2026-10-05", // YYYY-MM-DD (7 días)
 
   // ----------------------------------------------------------
   //  CONSIGNA
@@ -97,7 +97,7 @@ export const weekConfig = {
   //  URL de la imagen que se muestra en el hero.
   //  null = placeholder por defecto mientras no hay resultado.
   // ----------------------------------------------------------
-  resultImage: "/hero-semana1.jpg" as string | null,
+  resultImage: "/hero-semana0.jpg" as string | null,
 
   // ----------------------------------------------------------
   //  PAGO (MercadoPago)

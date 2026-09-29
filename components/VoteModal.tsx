@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { VoteOption, PaymentStatus } from "@/lib/types";
 import { weekConfig } from "@/config/week.config";
 import { cn } from "@/lib/utils";
-import { X, ChevronLeft, Check, Star } from "lucide-react";
+import { createVote } from "@/services/votes";
+import { X, ChevronLeft, Check, Star, PartyPopper } from "lucide-react";
 
 type Pack = (typeof weekConfig.payment.packs)[number];
 
@@ -14,7 +15,7 @@ type FormData = {
   ciudad: string;
 };
 
-type Step = "packs" | "form";
+type Step = "packs" | "form" | "success";
 
 type Props = {
   option: VoteOption;
@@ -28,7 +29,6 @@ export function VoteModal({ option, onClose }: Props) {
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [status, setStatus] = useState<PaymentStatus>("idle");
 
-  // Bloquear scroll del body
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
@@ -43,29 +43,20 @@ export function VoteModal({ option, onClose }: Props) {
     return Object.keys(e).length === 0;
   }
 
-  async function handlePay() {
+  async function handleSubmit() {
     if (!pack || !validate()) return;
     setStatus("processing");
     try {
-      const res = await fetch("/api/payment/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          optionId: option.id,
-          optionText: option.isCustom ? option.text : undefined,
-          votes: pack.votes,
-          price: pack.price,
-          voterName: form.nombre.trim(),
-          voterEmail: form.mail.trim(),
-          voterCity: form.ciudad.trim(),
-        }),
+      await createVote({
+        name: form.nombre.trim(),
+        email: form.mail.trim(),
+        city: form.ciudad.trim(),
+        candidate: option.text,
+        voteCount: pack.votes,
+        pollId: weekConfig.weekId,
       });
-      const data = await res.json();
-      if (data.checkoutUrl) {
-        window.location.href = data.checkoutUrl;
-      } else {
-        setStatus("error");
-      }
+      setStatus("idle");
+      setStep("success");
     } catch {
       setStatus("error");
     }
@@ -73,13 +64,11 @@ export function VoteModal({ option, onClose }: Props) {
 
   return (
     <>
-      {/* Backdrop */}
       <div
         className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
-        onClick={onClose}
+        onClick={step === "success" ? onClose : undefined}
       />
 
-      {/* Bottom sheet en mobile, centrado en desktop */}
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 z-50 flex items-end sm:items-center sm:justify-center sm:p-4 pointer-events-none">
         <div className="pointer-events-auto w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl overflow-hidden max-h-[92vh] flex flex-col">
 
@@ -105,8 +94,12 @@ export function VoteModal({ option, onClose }: Props) {
                 setErrors((e) => ({ ...e, [field]: undefined }));
               }}
               onBack={() => setStep("packs")}
-              onPay={handlePay}
+              onSubmit={handleSubmit}
             />
+          )}
+
+          {step === "success" && pack && (
+            <SuccessStep option={option} pack={pack} onClose={onClose} />
           )}
         </div>
       </div>
@@ -129,7 +122,6 @@ function PackStep({
 
   return (
     <>
-      {/* Header */}
       <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-[#141414]/6">
         <div>
           <p className="text-xs text-[#141414]/40 uppercase tracking-wider">Elegiste</p>
@@ -143,7 +135,6 @@ function PackStep({
         </button>
       </div>
 
-      {/* Packs */}
       <div className="px-5 py-5 flex flex-col gap-3 overflow-y-auto">
         <p className="text-sm font-semibold text-[#141414] mb-1">¿Cuántos votos?</p>
 
@@ -166,24 +157,14 @@ function PackStep({
                 </span>
               )}
               <div className="flex items-center justify-between">
-                <div>
-                  <p className={cn("font-bold text-base", isSelected ? "text-white" : "text-[#141414]")}>
-                    {p.label}
-                  </p>
-                  <p className={cn("text-xs mt-0.5", isSelected ? "text-white/50" : "text-[#141414]/40")}>
-                    ${p.price / p.votes} por voto
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className={cn("text-xl font-black", isSelected ? "text-[#ffdd4a]" : "text-[#141414]")}>
-                    ${p.price}
-                  </span>
-                  <div className={cn(
-                    "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
-                    isSelected ? "bg-[#ffdd4a] border-[#ffdd4a]" : "border-[#141414]/20"
-                  )}>
-                    {isSelected && <Check size={11} strokeWidth={3} className="text-[#141414]" />}
-                  </div>
+                <p className={cn("font-bold text-base", isSelected ? "text-white" : "text-[#141414]")}>
+                  {p.label}
+                </p>
+                <div className={cn(
+                  "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
+                  isSelected ? "bg-[#ffdd4a] border-[#ffdd4a]" : "border-[#141414]/20"
+                )}>
+                  {isSelected && <Check size={11} strokeWidth={3} className="text-[#141414]" />}
                 </div>
               </div>
             </button>
@@ -191,7 +172,6 @@ function PackStep({
         })}
       </div>
 
-      {/* CTA */}
       <div className="px-5 pb-6 pt-2">
         <button
           onClick={onNext}
@@ -213,7 +193,7 @@ function PackStep({
 /* ── Paso 2: resumen + formulario ──────────────────────── */
 
 function FormStep({
-  option, pack, form, errors, status, onChange, onBack, onPay,
+  option, pack, form, errors, status, onChange, onBack, onSubmit,
 }: {
   option: VoteOption;
   pack: Pack;
@@ -222,11 +202,10 @@ function FormStep({
   status: PaymentStatus;
   onChange: (field: keyof FormData, val: string) => void;
   onBack: () => void;
-  onPay: () => void;
+  onSubmit: () => void;
 }) {
   return (
     <>
-      {/* Header */}
       <div className="flex items-center gap-3 px-5 pt-5 pb-4 border-b border-[#141414]/6">
         <button
           onClick={onBack}
@@ -238,12 +217,11 @@ function FormStep({
       </div>
 
       <div className="px-5 py-5 overflow-y-auto flex flex-col gap-5">
-        {/* Resumen */}
         <div className="bg-[#141414] rounded-2xl px-5 py-4">
           <div className="flex items-center justify-between mb-3">
             <span className="text-white/40 text-xs uppercase tracking-wider">Tu voto</span>
             <span className="bg-[#ffdd4a] text-[#141414] text-[11px] font-bold px-2.5 py-0.5 rounded-full">
-              {pack.label} · ${pack.price}
+              {pack.label}
             </span>
           </div>
           <p className="text-white font-bold text-lg leading-snug">{option.text}</p>
@@ -259,7 +237,6 @@ function FormStep({
           </p>
         </div>
 
-        {/* Formulario */}
         <div className="flex flex-col gap-3">
           <p className="text-sm font-semibold text-[#141414]">Tus datos</p>
 
@@ -288,29 +265,101 @@ function FormStep({
         </div>
       </div>
 
-      {/* CTA */}
-      <div className="px-5 pb-6 pt-2">
+      <div className="px-5 pb-6 pt-2 flex flex-col gap-3">
+        <div className="flex items-center gap-2 bg-[#ffdd4a]/30 border border-[#ffdd4a] rounded-xl px-3 py-2.5">
+          <span className="text-base">🎁</span>
+          <p className="text-xs font-medium text-[#141414]/70 leading-snug">
+            Al votar entrás al <span className="font-bold text-[#141414]">sorteo semanal</span>. Más votos, más chances de ganar.
+          </p>
+        </div>
         <button
-          onClick={onPay}
+          onClick={onSubmit}
           disabled={status === "processing"}
           className="w-full rounded-2xl py-4 text-sm font-bold tracking-wide bg-[#ffdd4a] text-[#141414] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {status === "processing" ? (
             <span className="flex items-center justify-center gap-2">
               <span className="w-4 h-4 border-2 border-[#141414]/20 border-t-[#141414] rounded-full animate-spin" />
-              Procesando...
+              Enviando...
             </span>
           ) : (
-            `Pagar $${pack.price} y votar`
+            `Enviar ${pack.votes === 1 ? "mi voto" : `mis ${pack.votes} votos`}`
           )}
         </button>
         {status === "error" && (
-          <p className="text-center text-red-500 text-xs mt-2">
+          <p className="text-center text-red-500 text-xs mt-1">
             Hubo un error. Intentá de nuevo.
           </p>
         )}
       </div>
     </>
+  );
+}
+
+/* ── Paso 3: éxito ─────────────────────────────────────── */
+
+function SuccessStep({
+  option, pack, onClose,
+}: {
+  option: VoteOption;
+  pack: Pack;
+  onClose: () => void;
+}) {
+  return (
+    <div className="flex flex-col px-6 pt-8 pb-6 gap-6">
+      {/* Icono + título */}
+      <div className="flex flex-col items-center text-center gap-3">
+        <div className="w-16 h-16 rounded-full bg-[#ffdd4a] flex items-center justify-center">
+          <PartyPopper size={30} className="text-[#141414]" />
+        </div>
+        <div>
+          <h2 className="text-xl font-black text-[#141414]">¡Tu voto fue registrado!</h2>
+          <p className="text-sm text-[#141414]/50 mt-1 leading-relaxed">
+            {pack.votes === 1 ? "Sumaste 1 voto" : `Sumaste ${pack.votes} votos`} a favor de{" "}
+            <span className="font-semibold text-[#141414]">{option.text}</span>.
+          </p>
+        </div>
+      </div>
+
+      {/* Detalles */}
+      <div className="bg-[#f8f8f5] rounded-2xl divide-y divide-[#141414]/6">
+        <div className="flex items-center justify-between px-4 py-3">
+          <span className="text-xs text-[#141414]/40 uppercase tracking-wide">Candidato</span>
+          <span className="text-sm font-semibold text-[#141414]">{option.text}</span>
+        </div>
+        <div className="flex items-center justify-between px-4 py-3">
+          <span className="text-xs text-[#141414]/40 uppercase tracking-wide">Votos enviados</span>
+          <span className="text-sm font-semibold text-[#141414]">{pack.label}</span>
+        </div>
+        <div className="flex items-center justify-between px-4 py-3">
+          <span className="text-xs text-[#141414]/40 uppercase tracking-wide">Resultado</span>
+          <span className="text-sm font-semibold text-[#141414]">Hoy a las 22hs</span>
+        </div>
+      </div>
+
+      {/* Sorteo */}
+      <div className="flex items-center gap-3 bg-[#ffdd4a] rounded-2xl px-4 py-3">
+        <span className="text-xl">🎁</span>
+        <div>
+          <p className="text-xs font-bold text-[#141414]">¡Estás participando del sorteo semanal!</p>
+          <p className="text-xs text-[#141414]/60 mt-0.5 leading-snug">
+            Cada voto suma una entrada. El ganador se anuncia al final de la semana.
+          </p>
+        </div>
+      </div>
+
+      {/* Explicación */}
+      <p className="text-xs text-[#141414]/40 text-center leading-relaxed">
+        El ganador del día se revela a las 22hs y pasa a ocupar su lugar en la gran cena argentina. ¡Volvé mañana para seguir votando!
+      </p>
+
+      <button
+        onClick={onClose}
+        className="w-full rounded-2xl py-4 text-sm font-bold tracking-wide bg-[#141414] text-white active:scale-[0.98] transition-all"
+      >
+        Cerrar
+      </button>
+    </div>
   );
 }
 

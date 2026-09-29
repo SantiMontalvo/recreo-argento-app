@@ -64,7 +64,7 @@ export function Navbar() {
             </svg>
           </a>
         </div>
-        <div className="bg-[#77b6ea] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wide">
+        <div className="hidden sm:block bg-[#77b6ea] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wide">
           Tu opinión tambien juega
         </div>
       </div>
