@@ -169,10 +169,21 @@ export function VotingSection({
                     </div>
                   </div>
 
-                  {isSelected && option.description && (
-                    <p className="text-white/55 text-xs leading-relaxed mt-2 italic">
-                      {option.description}
-                    </p>
+                  {option.description && (
+                    <div
+                      className={cn(
+                        "grid transition-all duration-300 ease-out",
+                        isSelected
+                          ? "grid-rows-[1fr] opacity-100 scale-100"
+                          : "grid-rows-[0fr] opacity-0 scale-[0.98]"
+                      )}
+                    >
+                      <div className="overflow-hidden">
+                        <p className="text-white/55 text-xs leading-relaxed mt-2 italic">
+                          {option.description}
+                        </p>
+                      </div>
+                    </div>
                   )}
                 </div>
               </button>
