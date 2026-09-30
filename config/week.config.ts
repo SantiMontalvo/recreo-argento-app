@@ -46,9 +46,9 @@ export const weekConfig = {
     },
     {
       id: "opt_3",
-      text: "Carlos Gardel",
+      text: "Astor Piazzolla",
       description:
-        "El rey del tango, porque alguien tiene que ponerle música a la noche.",
+        "El revolucionario del tango, porque también hay lugar para quien se animó a cambiar las reglas.",
     },
     {
       id: "opt_4",
@@ -56,29 +56,30 @@ export const weekConfig = {
       description:
         "El médico que cambió la historia, porque también necesitamos héroes fuera de la cancha.",
     },
+
     {
       id: "opt_5",
+      text: "Maria Remedios del Valle",
+      description:
+        "Heroína de la Independencia, porque su historia merece estar en la mesa.",
+    },
+    {
+      id: "opt_6",
       text: "Jorge Luis Borges",
       description:
         "El maestro de las palabras, ideal para una sobremesa que dure siglos.",
     },
     {
-      id: "opt_6",
+      id: "opt_7",
       text: "Lionel Messi",
       description:
         "El capitán campeón del mundo, porque el fútbol no podía faltar en esta mesa.",
     },
     {
-      id: "opt_7",
+      id: "opt_8",
       text: "Jose de San Martin",
       description:
         "El Libertador, porque alguien tenía que organizar esta juntada.",
-    },
-    {
-      id: "opt_8",
-      text: "Maria Remedios del Valle",
-      description:
-        "Heroína de la Independencia, porque su historia merece estar en la mesa.",
     },
     {
       id: "opt_9",
@@ -136,13 +137,13 @@ export const weekConfig = {
   // }>,
 
   pastWeeks: [
-    {
-      weekId: "semana-0",
-      title: "La última gran cena argentina",
-      resultImage: `${BASE}/hall-of-fame1.jpg`,
-      totalVotes: 12345,
-      winners: [""],
-    },
+    // {
+    //   weekId: "semana-0",
+    //   title: "La última gran cena argentina",
+    //   resultImage: `${BASE}/hall-of-fame1.jpg`,
+    //   totalVotes: 12345,
+    //   winners: [""],
+    // },
     // {
     //   weekId: "semana-1",
     //   title: "La última gran cena argentina",

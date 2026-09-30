@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { weekConfig } from "@/config/week.config";
 import { VoteOption } from "@/lib/types";
@@ -19,26 +18,54 @@ export function VotingSection({
 }: VotingSectionProps) {
   const [isClosed, setIsClosed] = useState(initialIsClosed);
   const [selected, setSelected] = useState<string | null>(null);
-
-  useEffect(() => {
-    const check = () => setIsClosed(!isVotingOpen());
-    check();
-    const interval = setInterval(check, 60_000);
-    return () => clearInterval(interval);
-  }, []);
   const [customText, setCustomText] = useState("");
   const [showCustom, setShowCustom] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
   const { voting } = weekConfig.ui;
 
-  const totalVotes = availableOptions.reduce((s, o) => s + o.voteCount, 0);
+  useEffect(() => {
+    const check = () => setIsClosed(!isVotingOpen());
+
+    check();
+
+    const interval = setInterval(check, 60_000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const totalVotes = availableOptions.reduce(
+    (sum, option) => sum + option.voteCount,
+    0
+  );
 
   const selectedOption: VoteOption | null =
     selected === "custom" && customText.trim()
-      ? { id: "custom", text: customText.trim(), voteCount: 0, isCustom: true }
-      : availableOptions.find((o) => o.id === selected) ?? null;
+      ? {
+          id: "custom",
+          text: customText.trim(),
+          voteCount: 0,
+          isCustom: true,
+        }
+      : availableOptions.find((option) => option.id === selected) ?? null;
 
-  const canVote = !!selectedOption;
+  /**
+   * Para opciones personalizadas permitimos únicamente:
+   * - Letras
+   * - Tildes
+   * - Ñ
+   * - Espacios
+   *
+   * No permitimos números, puntos, comas, símbolos, etc.
+   */
+  const isValidCustomText =
+    selected !== "custom"
+      ? true
+      : /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ]+(?:\s+[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ]+)*$/.test(
+          customText.trim()
+        );
+
+  const canVote = !!selectedOption && isValidCustomText;
 
   if (isClosed) {
     return (
@@ -58,6 +85,7 @@ export function VotingSection({
           <h2 className="text-xl font-bold text-[#141414]">
             {voting.sectionTitle}
           </h2>
+
           <p className="text-sm text-[#141414]/50 mt-0.5 leading-snug">
             {weekConfig.challenge.title}
           </p>
@@ -66,6 +94,7 @@ export function VotingSection({
         {/* Banner sorteo */}
         <div className="flex items-center gap-3 bg-[#ffdd4a] rounded-2xl px-4 py-3 mb-5">
           <span className="text-xl">🎁</span>
+
           <p className="text-xs font-semibold text-[#141414] leading-snug">
             Cada voto te da una chance en el{" "}
             <span className="underline underline-offset-2">sorteo semanal</span>
@@ -78,6 +107,7 @@ export function VotingSection({
           {availableOptions.map((option) => {
             const pct =
               totalVotes > 0 ? (option.voteCount / totalVotes) * 100 : 0;
+
             const isSelected = selected === option.id;
 
             return (
@@ -100,6 +130,7 @@ export function VotingSection({
                     style={{ width: `${pct}%` }}
                   />
                 )}
+
                 <div className="relative px-4 py-3">
                   <div className="flex items-center justify-between gap-3">
                     <span
@@ -110,6 +141,7 @@ export function VotingSection({
                     >
                       {option.text}
                     </span>
+
                     <div className="flex items-center gap-2 flex-shrink-0">
                       {totalVotes > 0 && (
                         <span
@@ -121,6 +153,7 @@ export function VotingSection({
                           {Math.round(pct)}%
                         </span>
                       )}
+
                       <div
                         className={cn(
                           "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
@@ -135,6 +168,7 @@ export function VotingSection({
                       </div>
                     </div>
                   </div>
+
                   {isSelected && option.description && (
                     <p className="text-white/55 text-xs leading-relaxed mt-2 italic">
                       {option.description}
@@ -155,6 +189,7 @@ export function VotingSection({
               className="w-full text-left rounded-2xl border-2 border-dashed border-[#141414]/15 px-4 py-3 text-sm text-[#141414]/40 flex items-center gap-2 active:scale-[0.98] transition-all"
             >
               <Plus size={15} strokeWidth={2.5} />
+
               {voting.customOptionPlaceholder}
             </button>
           ) : (
@@ -177,7 +212,14 @@ export function VotingSection({
                     autoFocus
                     type="text"
                     value={customText}
-                    onChange={(e) => setCustomText(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+
+                      // Solo permite letras, tildes, ñ y espacios.
+                      if (/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]*$/.test(value)) {
+                        setCustomText(value);
+                      }
+                    }}
                     placeholder="Escribí tu opción..."
                     maxLength={60}
                     enterKeyHint="done"
