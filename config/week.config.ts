@@ -143,6 +143,13 @@ export const weekConfig = {
       totalVotes: 12345,
       winners: [""],
     },
+    // {
+    //   weekId: "semana-1",
+    //   title: "La última gran cena argentina",
+    //   resultImage: `${BASE}/hall-of-fame1.jpg`,
+    //   totalVotes: 12345,
+    //   winners: [""],
+    // },
   ] as Array<{
     weekId: string;
     title: string;
@@ -156,15 +163,15 @@ export const weekConfig = {
   // ----------------------------------------------------------
   comingSoon: [
     {
-      title: "La Gran Parrillada Nacional",
-      hint: "Hay cosas que nunca pueden faltar en un asado... ¿o sí?",
-    },
-    {
       title: "Las 7 maravillas de nuestro país",
       hint: "Argentina tiene lugares increíbles. Pero solo 7 llegarán a la cima.",
     },
     {
-      title: "Recreo Argento streaming",
+      title: "La Gran Parrillada Nacional",
+      hint: "Hay cosas que nunca pueden faltar en un asado... ¿o sí?",
+    },
+    {
+      title: "RA Streaming",
       hint: "El panel perfecto todavía no existe... ¿a quién sentarías frente al micrófono?",
     },
   ],
@@ -175,18 +182,18 @@ export const weekConfig = {
   ui: {
     hero: {
       badge: "Semana 1",
-      title: "¿Quiénes se sientan en la última gran cena argentina?",
+      title: "¿A quiénes sentamos en la última gran cena argentina?",
       subtitle:
-        "Elegí una figura por día. El más votado consigue su lugar en la mesa.",
+        "Elegí una figura por día. La más votada se gana su lugar en la mesa.",
     },
     voting: {
-      closingHour: 22, // hora de cierre diario (formato 24hs, hora de Argentina)
+      closingHour: 23, // hora de cierre diario (formato 24hs, hora de Argentina)
       sectionTitle: "Votá hoy",
       customOptionPlaceholder: "¿No está lo que querés? Escribilo acá...",
       voteButton: "Votar",
       processingButton: "Procesando...",
       closedMessage:
-        "La votación de hoy ya cerró. El ganador se revela a las 22hs.",
+        "La votación de hoy ya cerró. El ganador se revela a las 23hs.",
       successMessage: "¡Tu voto fue registrado!",
     },
     winners: {

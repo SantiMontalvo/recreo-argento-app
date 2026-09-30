@@ -25,19 +25,26 @@ type Props = {
 export function VoteModal({ option, onClose }: Props) {
   const [step, setStep] = useState<Step>("packs");
   const [pack, setPack] = useState<Pack | null>(null);
-  const [form, setForm] = useState<FormData>({ nombre: "", mail: "", ciudad: "" });
+  const [form, setForm] = useState<FormData>({
+    nombre: "",
+    mail: "",
+    ciudad: "",
+  });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [status, setStatus] = useState<PaymentStatus>("idle");
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, []);
 
   function validate() {
     const e: Partial<FormData> = {};
     if (form.nombre.trim().length < 2) e.nombre = "Ingresá tu nombre";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.mail.trim())) e.mail = "Mail inválido";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.mail.trim()))
+      e.mail = "Mail inválido";
     if (form.ciudad.trim().length < 2) e.ciudad = "Ingresá tu ciudad";
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -71,7 +78,6 @@ export function VoteModal({ option, onClose }: Props) {
 
       <div className="fixed inset-x-0 bottom-0 sm:inset-0 z-50 flex items-end sm:items-center sm:justify-center sm:p-4 pointer-events-none">
         <div className="pointer-events-auto w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl overflow-hidden max-h-[92vh] flex flex-col">
-
           {step === "packs" && (
             <PackStep
               option={option}
@@ -110,7 +116,11 @@ export function VoteModal({ option, onClose }: Props) {
 /* ── Paso 1: selección de pack ─────────────────────────── */
 
 function PackStep({
-  option, selected, onSelect, onClose, onNext,
+  option,
+  selected,
+  onSelect,
+  onClose,
+  onNext,
 }: {
   option: VoteOption;
   selected: Pack | null;
@@ -124,8 +134,12 @@ function PackStep({
     <>
       <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-[#141414]/6">
         <div>
-          <p className="text-xs text-[#141414]/40 uppercase tracking-wider">Elegiste</p>
-          <h2 className="text-base font-bold text-[#141414] leading-snug">{option.text}</h2>
+          <p className="text-xs text-[#141414]/40 uppercase tracking-wider">
+            Elegiste
+          </p>
+          <h2 className="text-base font-bold text-[#141414] leading-snug">
+            {option.text}
+          </h2>
         </div>
         <button
           onClick={onClose}
@@ -136,7 +150,9 @@ function PackStep({
       </div>
 
       <div className="px-5 py-5 flex flex-col gap-3 overflow-y-auto">
-        <p className="text-sm font-semibold text-[#141414] mb-1">¿Cuántos votos?</p>
+        <p className="text-sm font-semibold text-[#141414] mb-1">
+          ¿Cuántos votos?
+        </p>
 
         {packs.map((p) => {
           const isSelected = selected?.votes === p.votes;
@@ -157,14 +173,29 @@ function PackStep({
                 </span>
               )}
               <div className="flex items-center justify-between">
-                <p className={cn("font-bold text-base", isSelected ? "text-white" : "text-[#141414]")}>
+                <p
+                  className={cn(
+                    "font-bold text-base",
+                    isSelected ? "text-white" : "text-[#141414]"
+                  )}
+                >
                   {p.label}
                 </p>
-                <div className={cn(
-                  "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
-                  isSelected ? "bg-[#ffdd4a] border-[#ffdd4a]" : "border-[#141414]/20"
-                )}>
-                  {isSelected && <Check size={11} strokeWidth={3} className="text-[#141414]" />}
+                <div
+                  className={cn(
+                    "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
+                    isSelected
+                      ? "bg-[#ffdd4a] border-[#ffdd4a]"
+                      : "border-[#141414]/20"
+                  )}
+                >
+                  {isSelected && (
+                    <Check
+                      size={11}
+                      strokeWidth={3}
+                      className="text-[#141414]"
+                    />
+                  )}
                 </div>
               </div>
             </button>
@@ -193,7 +224,14 @@ function PackStep({
 /* ── Paso 2: resumen + formulario ──────────────────────── */
 
 function FormStep({
-  option, pack, form, errors, status, onChange, onBack, onSubmit,
+  option,
+  pack,
+  form,
+  errors,
+  status,
+  onChange,
+  onBack,
+  onSubmit,
 }: {
   option: VoteOption;
   pack: Pack;
@@ -219,12 +257,16 @@ function FormStep({
       <div className="px-5 py-5 overflow-y-auto flex flex-col gap-5">
         <div className="bg-[#141414] rounded-2xl px-5 py-4">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-white/40 text-xs uppercase tracking-wider">Tu voto</span>
+            <span className="text-white/40 text-xs uppercase tracking-wider">
+              Tu voto
+            </span>
             <span className="bg-[#ffdd4a] text-[#141414] text-[11px] font-bold px-2.5 py-0.5 rounded-full">
               {pack.label}
             </span>
           </div>
-          <p className="text-white font-bold text-lg leading-snug">{option.text}</p>
+          <p className="text-white font-bold text-lg leading-snug">
+            {option.text}
+          </p>
           {option.description && (
             <p className="text-white/40 text-xs mt-1.5 leading-relaxed italic">
               {option.description}
@@ -269,7 +311,9 @@ function FormStep({
         <div className="flex items-center gap-2 bg-[#ffdd4a]/30 border border-[#ffdd4a] rounded-xl px-3 py-2.5">
           <span className="text-base">🎁</span>
           <p className="text-xs font-medium text-[#141414]/70 leading-snug">
-            Al votar entrás al <span className="font-bold text-[#141414]">sorteo semanal</span>. Más votos, más chances de ganar.
+            Al votar entrás al{" "}
+            <span className="font-bold text-[#141414]">sorteo semanal</span>.
+            Más votos, más chances de ganar.
           </p>
         </div>
         <button
@@ -299,7 +343,9 @@ function FormStep({
 /* ── Paso 3: éxito ─────────────────────────────────────── */
 
 function SuccessStep({
-  option, pack, onClose,
+  option,
+  pack,
+  onClose,
 }: {
   option: VoteOption;
   pack: Pack;
@@ -313,9 +359,14 @@ function SuccessStep({
           <PartyPopper size={30} className="text-[#141414]" />
         </div>
         <div>
-          <h2 className="text-xl font-black text-[#141414]">¡Tu voto fue registrado!</h2>
+          <h2 className="text-xl font-black text-[#141414]">
+            ¡Tu voto fue registrado!
+          </h2>
           <p className="text-sm text-[#141414]/50 mt-1 leading-relaxed">
-            {pack.votes === 1 ? "Sumaste 1 voto" : `Sumaste ${pack.votes} votos`} a favor de{" "}
+            {pack.votes === 1
+              ? "Sumaste 1 voto"
+              : `Sumaste ${pack.votes} votos`}{" "}
+            a favor de{" "}
             <span className="font-semibold text-[#141414]">{option.text}</span>.
           </p>
         </div>
@@ -324,16 +375,28 @@ function SuccessStep({
       {/* Detalles */}
       <div className="bg-[#f8f8f5] rounded-2xl divide-y divide-[#141414]/6">
         <div className="flex items-center justify-between px-4 py-3">
-          <span className="text-xs text-[#141414]/40 uppercase tracking-wide">Candidato</span>
-          <span className="text-sm font-semibold text-[#141414]">{option.text}</span>
+          <span className="text-xs text-[#141414]/40 uppercase tracking-wide">
+            Candidato
+          </span>
+          <span className="text-sm font-semibold text-[#141414]">
+            {option.text}
+          </span>
         </div>
         <div className="flex items-center justify-between px-4 py-3">
-          <span className="text-xs text-[#141414]/40 uppercase tracking-wide">Votos enviados</span>
-          <span className="text-sm font-semibold text-[#141414]">{pack.label}</span>
+          <span className="text-xs text-[#141414]/40 uppercase tracking-wide">
+            Votos enviados
+          </span>
+          <span className="text-sm font-semibold text-[#141414]">
+            {pack.label}
+          </span>
         </div>
         <div className="flex items-center justify-between px-4 py-3">
-          <span className="text-xs text-[#141414]/40 uppercase tracking-wide">Resultado</span>
-          <span className="text-sm font-semibold text-[#141414]">Hoy a las 22hs</span>
+          <span className="text-xs text-[#141414]/40 uppercase tracking-wide">
+            Resultado
+          </span>
+          <span className="text-sm font-semibold text-[#141414]">
+            Hoy a las 23hs
+          </span>
         </div>
       </div>
 
@@ -341,16 +404,20 @@ function SuccessStep({
       <div className="flex items-center gap-3 bg-[#ffdd4a] rounded-2xl px-4 py-3">
         <span className="text-xl">🎁</span>
         <div>
-          <p className="text-xs font-bold text-[#141414]">¡Estás participando del sorteo semanal!</p>
+          <p className="text-xs font-bold text-[#141414]">
+            ¡Estás participando del sorteo semanal!
+          </p>
           <p className="text-xs text-[#141414]/60 mt-0.5 leading-snug">
-            Cada voto suma una entrada. El ganador se anuncia al final de la semana.
+            Cada voto suma una entrada. El ganador se anuncia al final de la
+            semana.
           </p>
         </div>
       </div>
 
       {/* Explicación */}
       <p className="text-xs text-[#141414]/40 text-center leading-relaxed">
-        El ganador del día se revela a las 22hs y pasa a ocupar su lugar en la gran cena argentina. ¡Volvé mañana para seguir votando!
+        El ganador del día se revela a las 23hs y pasa a ocupar su lugar en la
+        gran cena argentina. ¡Volvé mañana para seguir votando!
       </p>
 
       <button
@@ -364,7 +431,12 @@ function SuccessStep({
 }
 
 function Field({
-  label, value, error, placeholder, type = "text", onChange,
+  label,
+  value,
+  error,
+  placeholder,
+  type = "text",
+  onChange,
 }: {
   label: string;
   value: string;

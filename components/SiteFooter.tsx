@@ -17,7 +17,7 @@ export function SiteFooter() {
         </div>
 
         {/* Redes */}
-        <div className="flex items-center gap-4">
+        {/* <div className="flex items-center gap-4">
           <a
             href={weekConfig.social.instagram}
             target="_blank"
@@ -42,7 +42,7 @@ export function SiteFooter() {
           >
             TikTok
           </a>
-        </div>
+        </div> */}
 
         {/* Copyright */}
         <p className="text-white/20 text-[11px]">{weekConfig.ui.footer.text}</p>

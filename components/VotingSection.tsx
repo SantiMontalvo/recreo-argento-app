@@ -13,7 +13,10 @@ type VotingSectionProps = {
   todayWinner: VoteOption | null;
 };
 
-export function VotingSection({ availableOptions, isClosed: initialIsClosed }: VotingSectionProps) {
+export function VotingSection({
+  availableOptions,
+  isClosed: initialIsClosed,
+}: VotingSectionProps) {
   const [isClosed, setIsClosed] = useState(initialIsClosed);
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -30,16 +33,19 @@ export function VotingSection({ availableOptions, isClosed: initialIsClosed }: V
 
   const totalVotes = availableOptions.reduce((s, o) => s + o.voteCount, 0);
 
-  const selectedOption: VoteOption | null = selected === "custom" && customText.trim()
-    ? { id: "custom", text: customText.trim(), voteCount: 0, isCustom: true }
-    : availableOptions.find((o) => o.id === selected) ?? null;
+  const selectedOption: VoteOption | null =
+    selected === "custom" && customText.trim()
+      ? { id: "custom", text: customText.trim(), voteCount: 0, isCustom: true }
+      : availableOptions.find((o) => o.id === selected) ?? null;
 
   const canVote = !!selectedOption;
 
   if (isClosed) {
     return (
       <section className="bg-white rounded-2xl border border-[#141414]/6 px-5 py-8">
-        <p className="text-center text-[#141414]/40 text-sm">{voting.closedMessage}</p>
+        <p className="text-center text-[#141414]/40 text-sm">
+          {voting.closedMessage}
+        </p>
       </section>
     );
   }
@@ -49,7 +55,9 @@ export function VotingSection({ availableOptions, isClosed: initialIsClosed }: V
       <section className="bg-white rounded-2xl border border-[#141414]/6 px-5 py-5">
         {/* Header */}
         <div className="mb-4">
-          <h2 className="text-xl font-bold text-[#141414]">{voting.sectionTitle}</h2>
+          <h2 className="text-xl font-bold text-[#141414]">
+            {voting.sectionTitle}
+          </h2>
           <p className="text-sm text-[#141414]/50 mt-0.5 leading-snug">
             {weekConfig.challenge.title}
           </p>
@@ -59,23 +67,31 @@ export function VotingSection({ availableOptions, isClosed: initialIsClosed }: V
         <div className="flex items-center gap-3 bg-[#ffdd4a] rounded-2xl px-4 py-3 mb-5">
           <span className="text-xl">🎁</span>
           <p className="text-xs font-semibold text-[#141414] leading-snug">
-            Cada voto te da una chance en el <span className="underline underline-offset-2">sorteo semanal</span>. Más votos, más chances.
+            Cada voto te da una chance en el{" "}
+            <span className="underline underline-offset-2">sorteo semanal</span>
+            . Más votos, más chances.
           </p>
         </div>
 
         {/* Opciones */}
         <div className="flex flex-col gap-2 mb-5">
           {availableOptions.map((option) => {
-            const pct = totalVotes > 0 ? (option.voteCount / totalVotes) * 100 : 0;
+            const pct =
+              totalVotes > 0 ? (option.voteCount / totalVotes) * 100 : 0;
             const isSelected = selected === option.id;
 
             return (
               <button
                 key={option.id}
-                onClick={() => { setSelected(option.id); setShowCustom(false); }}
+                onClick={() => {
+                  setSelected(option.id);
+                  setShowCustom(false);
+                }}
                 className={cn(
                   "relative w-full text-left rounded-2xl overflow-hidden transition-all duration-200 active:scale-[0.98]",
-                  isSelected ? "bg-[#141414] shadow-md" : "bg-[#f8f8f5] border border-[#141414]/6"
+                  isSelected
+                    ? "bg-[#141414] shadow-md"
+                    : "bg-[#f8f8f5] border border-[#141414]/6"
                 )}
               >
                 {!isSelected && totalVotes > 0 && pct > 0 && (
@@ -86,20 +102,36 @@ export function VotingSection({ availableOptions, isClosed: initialIsClosed }: V
                 )}
                 <div className="relative px-4 py-3">
                   <div className="flex items-center justify-between gap-3">
-                    <span className={cn("text-sm font-semibold leading-snug", isSelected ? "text-white" : "text-[#141414]")}>
+                    <span
+                      className={cn(
+                        "text-sm font-semibold leading-snug",
+                        isSelected ? "text-white" : "text-[#141414]"
+                      )}
+                    >
                       {option.text}
                     </span>
                     <div className="flex items-center gap-2 flex-shrink-0">
                       {totalVotes > 0 && (
-                        <span className={cn("text-xs font-medium", isSelected ? "text-white/50" : "text-[#77b6ea]")}>
+                        <span
+                          className={cn(
+                            "text-xs font-medium",
+                            isSelected ? "text-white/50" : "text-[#77b6ea]"
+                          )}
+                        >
                           {Math.round(pct)}%
                         </span>
                       )}
-                      <div className={cn(
-                        "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
-                        isSelected ? "bg-[#ffdd4a] border-[#ffdd4a]" : "border-[#141414]/20"
-                      )}>
-                        {isSelected && <div className="w-2 h-2 rounded-full bg-[#141414]" />}
+                      <div
+                        className={cn(
+                          "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
+                          isSelected
+                            ? "bg-[#ffdd4a] border-[#ffdd4a]"
+                            : "border-[#141414]/20"
+                        )}
+                      >
+                        {isSelected && (
+                          <div className="w-2 h-2 rounded-full bg-[#141414]" />
+                        )}
                       </div>
                     </div>
                   </div>
@@ -116,7 +148,10 @@ export function VotingSection({ availableOptions, isClosed: initialIsClosed }: V
           {/* Opción personalizada */}
           {!showCustom ? (
             <button
-              onClick={() => { setShowCustom(true); setSelected("custom"); }}
+              onClick={() => {
+                setShowCustom(true);
+                setSelected("custom");
+              }}
               className="w-full text-left rounded-2xl border-2 border-dashed border-[#141414]/15 px-4 py-3 text-sm text-[#141414]/40 flex items-center gap-2 active:scale-[0.98] transition-all"
             >
               <Plus size={15} strokeWidth={2.5} />
@@ -124,11 +159,17 @@ export function VotingSection({ availableOptions, isClosed: initialIsClosed }: V
             </button>
           ) : (
             <div className="flex flex-col gap-2">
-              <div
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.querySelector("input")?.blur();
+                }}
                 onClick={() => setSelected("custom")}
                 className={cn(
                   "rounded-2xl overflow-hidden cursor-text transition-all",
-                  selected === "custom" ? "bg-[#141414] shadow-md" : "bg-[#f8f8f5] border border-[#141414]/6"
+                  selected === "custom"
+                    ? "bg-[#141414] shadow-md"
+                    : "bg-[#f8f8f5] border border-[#141414]/6"
                 )}
               >
                 <div className="px-4 py-3">
@@ -139,6 +180,8 @@ export function VotingSection({ availableOptions, isClosed: initialIsClosed }: V
                     onChange={(e) => setCustomText(e.target.value)}
                     placeholder="Escribí tu opción..."
                     maxLength={60}
+                    enterKeyHint="done"
+                    inputMode="text"
                     className={cn(
                       "w-full bg-transparent text-sm font-semibold outline-none",
                       selected === "custom"
@@ -147,9 +190,12 @@ export function VotingSection({ availableOptions, isClosed: initialIsClosed }: V
                     )}
                   />
                 </div>
-              </div>
+              </form>
+
               <p className="text-xs text-[#141414]/45 leading-relaxed px-1">
-                ✍️ Escribí el nombre completo y sin abreviaturas (ej: &quot;Juan Manuel Fangio&quot;, no &quot;Fangio&quot;). Los votos con nombres incompletos o ambiguos pueden no contabilizarse.
+                ✍️ Escribí el nombre completo y sin abreviaturas (ej: &quot;Juan
+                Manuel Fangio&quot;, no &quot;Fangio&quot;). Los votos con
+                nombres incompletos o ambiguos pueden no contabilizarse.
               </p>
             </div>
           )}
@@ -160,7 +206,7 @@ export function VotingSection({ availableOptions, isClosed: initialIsClosed }: V
           onClick={() => canVote && setShowModal(true)}
           disabled={!canVote}
           className={cn(
-            "w-full rounded-2xl py-4 text-sm font-bold tracking-wide transition-all duration-150",
+            "w-full rounded-2xl py-3 text-sm font-bold tracking-wide transition-all duration-150",
             canVote
               ? "bg-[#ffdd4a] text-[#141414] active:scale-[0.98] shadow-sm"
               : "bg-[#141414]/8 text-[#141414]/30 cursor-not-allowed"

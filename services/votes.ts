@@ -7,6 +7,7 @@ interface CreateVoteParams {
   candidate: string;
   voteCount: number;
   pollId: string;
+  comment?: string;
 }
 
 export const createVote = async ({
@@ -16,6 +17,7 @@ export const createVote = async ({
   candidate,
   voteCount,
   pollId,
+  comment,
 }: CreateVoteParams) => {
   const { data, error } = await supabase
     .from("votes")
@@ -26,6 +28,7 @@ export const createVote = async ({
       candidate,
       vote_count: voteCount,
       poll_id: pollId,
+      comment,
     })
     .select()
     .single();

@@ -1,6 +1,6 @@
 import { weekConfig } from "@/config/week.config";
 
-const BLUR_LEVELS = ["blur-none", "blur-[1px]", "blur-[3px]", "blur-[5px]"];
+const BLUR_LEVELS = ["blur-[0.5px]", "blur-[2px]", "blur-[3px]", "blur-[5px]"];
 const OPACITY_LEVELS = [
   "opacity-100",
   "opacity-60",
@@ -48,11 +48,11 @@ export function ComingSoon() {
           );
         })}
       </div>
-      <div className="px-5 py-4">
+      {/* <div className="px-5 py-4">
         <button className="w-full text-center text-xs font-semibold text-[#141414] bg-[#ffdd4a] rounded-xl py-2.5 hover:bg-[#ffdd4a]/90 transition-colors">
           Avisame cuando esté
         </button>
-      </div>
+      </div> */}
     </section>
   );
 }

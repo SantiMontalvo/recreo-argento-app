@@ -3,21 +3,21 @@ const STEPS = [
     number: "01",
     title: "Elegí tu candidato",
     description:
-      "Cada día hay una lista de opciones. Elegí la tuya o escribí una que no esté.",
+      "Elegí una opción de la lista o escribí la tuya si no aparece.",
     color: "#77b6ea",
   },
   {
     number: "02",
-    title: "Pagá tu voto",
+    title: "Poné tus votos",
     description:
-      "Con un pago mínimo tu voto queda registrado. Sin registro, sin contraseñas.",
+      "Elegí cuántos votos querés darle, pagá y participá. Sin registro ni contraseñas.",
     color: "#ffdd4a",
   },
   {
     number: "03",
     title: "El más votado entra",
     description:
-      "Al cierre del día, el ganador pasa a la foto. Al otro día ya no está en la lista.",
+      "Al cierre del día, el más votado entra en la imagen y ya no puede volver a votarse. Mañana, arrancamos de nuevo.",
     color: "#141414",
   },
 ];
@@ -40,7 +40,9 @@ export function HowItWorks() {
               {step.number}
             </span>
             <div>
-              <p className="text-sm font-semibold text-[#141414]">{step.title}</p>
+              <p className="text-sm font-semibold text-[#141414]">
+                {step.title}
+              </p>
               <p className="text-xs text-[#141414]/50 mt-0.5 leading-relaxed">
                 {step.description}
               </p>
