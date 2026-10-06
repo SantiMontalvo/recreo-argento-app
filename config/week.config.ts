@@ -13,7 +13,7 @@ export const weekConfig = {
   weekId: "semana-1", // identificador único, no lo cambies una vez que arrancó la semana
   weekNumber: 1,
   startDate: "2026-09-22", // YYYY-MM-DD
-  endDate: "2026-10-05", // YYYY-MM-DD (7 días)
+  endDate: "2026-11-05", // YYYY-MM-DD (7 días)
 
   // ----------------------------------------------------------
   //  CONSIGNA
